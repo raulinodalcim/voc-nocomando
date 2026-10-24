@@ -415,6 +415,18 @@ const logoSlugs={
  "Internacional":"sc-internacional","Mirassol":"mirassol-fc","Palmeiras":"palmeiras","Red Bull Bragantino":"rb-bragantino","Remo":"club-de-remo",
  "Santos":"santos-fc","São Paulo":"sao-paulo","Vasco da Gama":"vasco-da-gama","Vitória":"vitoria"
 };
+// Escudos oficiais atuais via URLs PNG transparentes do FootyLogos para os clubes usados nas copas.
+// Quando algum slug não estiver disponível, ccCrestImageError tenta o fallback pela página do próprio clube.
+Object.assign(logoSlugs,{
+ 'River Plate':'river-plate','Boca Juniors':'boca-juniors','Racing Club':'racing-club','Estudiantes':'estudiantes-de-la-plata','Lanús':'lanus','Rosario Central':'rosario-central','Independiente Rivadavia':'independiente-rivadavia','Platense':'platense',
+ 'Atlético Nacional':'atletico-nacional','Junior de Barranquilla':'junior-de-barranquilla','Independiente Medellín':'independiente-medellin','Independiente Santa Fe':'independiente-santa-fe','Deportes Tolima':'deportes-tolima',
+ 'Universitario':'universitario','Sporting Cristal':'sporting-cristal','Cusco FC':'cusco-fc','Peñarol':'penarol','Nacional':'nacional','LDU Quito':'ldu-quito','Olimpia':'olimpia','Independiente del Valle':'independiente-del-valle','Libertad':'libertad','Cerro Porteño':'cerro-porteno','Independiente':'independiente','Bolívar':'bolivar','Colo-Colo':'colo-colo','Vélez Sarsfield':'velez-sarsfield','Barcelona SC':'barcelona-sc',
+ 'América de Cali':'america-de-cali','Defensa y Justicia':'defensa-y-justicia','Guaraní':'guarani','Danubio':'danubio','Caracas FC':'caracas-fc','Universidad Católica':'universidad-catolica','Blooming':'blooming','Sportivo Luqueño':'sportivo-luqueno','Deportivo Táchira':'deportivo-tachira','Cienciano':'cienciano','Melgar':'melgar',
+ 'Club América':'club-america','Monterrey':'monterrey','Los Angeles FC':'los-angeles-fc','Inter Miami':'inter-miami','Seattle Sounders':'seattle-sounders','Al Ahly':'al-ahly','Wydad Casablanca':'wydad-casablanca','Mamelodi Sundowns':'mamelodi-sundowns','Urawa Red Diamonds':'urawa-red-diamonds','Al Ain':'al-ain','Ulsan HD':'ulsan-hd',
+ 'Real Madrid':'real-madrid','Manchester City':'manchester-city','Bayern de Munique':'bayern-munich','Paris Saint-Germain':'paris-saint-germain','Inter de Milão':'inter-milan','Liverpool':'liverpool',
+ 'Vila Nova':'vila-nova','Novorizontino':'novorizontino','Juventude':'juventude','Fortaleza':'fortaleza','Criciúma':'criciuma','Atlético-GO':'atletico-goianiense','CRB':'crb','Operário-PR':'operario-pr','Sport':'sport-recife','Goiás':'goias','Cuiabá':'cuiaba','Ceará':'ceara','São Bernardo':'sao-bernardo',
+ 'Amazonas':'amazonas','Anápolis':'anapolis','Barra-SC':'barra-sc','Botafogo-PB':'botafogo-pb','Brusque':'brusque','Caxias':'caxias','Confiança':'confianca','Ferroviária':'ferroviaria','Figueirense':'figueirense','Floresta':'floresta','Guarani':'guarani','Inter de Limeira':'inter-de-limeira','Itabaiana':'itabaiana','Ituano':'ituano','Maranhão':'maranhao','Maringá':'maringa','Paysandu':'paysandu','Santa Cruz':'santa-cruz','Volta Redonda':'volta-redonda','Ypiranga-RS':'ypiranga-rs'
+});
 const goalkeepers=new Set([
  "Mycael","Everson","Gabriel Delfim","Ronaldo","Léo Vieira","Guido Herrera","Warleson","Gabriel Batista","Hugo Souza","Matheus Donelli",
  "Richard","Pedro Morisco","Otávio","Rafael Santos","Agustín Rossi","Andrew","Fábio","Marcelo Pitaluga","Weverton","Tiago Volpi","Matheus Cunha",
@@ -452,7 +464,18 @@ Object.assign(scoringProfiles,{
  'Juventude':['Gilberto','Erick Farias','Ênio','Lucas Barbosa'],
  'Fortaleza':['Lucero','Deyverson','Moisés','Marinho']
 });
-const slugBase="https://www.footylogos.com/dls/logo/";
+const slugBase="https://www.footylogos.com/dls/logo/rgba-v1/";
+// Escudos da Série A 2026, com um arquivo próprio por clube para evitar abreviações como FLA, FLU ou COR.
+// Os nomes dos arquivos são URL-encoded para preservar espaços e acentos no caminho do GitHub Raw.
+const brazilianCrestFiles={
+ "Athletico-PR":"Athletico Paranaense.png","Atlético-MG":"Atlético Mineiro.png","Bahia":"Bahia.png","Botafogo":"Botafogo.png",
+ "Chapecoense":"Chapecoense.png","Corinthians":"Corinthians.png","Coritiba":"Coritiba.png","Cruzeiro":"Cruzeiro.png",
+ "Flamengo":"Flamengo.png","Fluminense":"Fluminense.png","Grêmio":"Grêmio.png","Internacional":"Internacional.png",
+ "Mirassol":"Mirassol.png","Palmeiras":"Palmeiras.png","Red Bull Bragantino":"Red Bull Bragantino.png","Remo":"Remo.png",
+ "Santos":"Santos.png","São Paulo":"São Paulo.png","Vasco da Gama":"Vasco da Gama.png","Vitória":"Vitória.png"
+};
+const brazilianCrestBase="https://raw.githubusercontent.com/Lobobinho/Escudos-dos-Clubes-do-Brasileirao-2026/master/";
+const logoUrlOverrides=Object.fromEntries(Object.entries(brazilianCrestFiles).map(([club,file])=>[club,brazilianCrestBase+encodeURIComponent(file)]));
 const ccWikiClubTitles={
  'River Plate':'Club Atlético River Plate','Boca Juniors':'Boca Juniors','Racing Club':'Racing Club de Avellaneda','Estudiantes':'Estudiantes de La Plata','Lanús':'Club Atlético Lanús','Rosario Central':'Rosario Central','Independiente Rivadavia':'Independiente Rivadavia','Platense':'Club Atlético Platense',
  'Atlético Nacional':'Atlético Nacional','Junior de Barranquilla':'Junior de Barranquilla','Independiente Medellín':'Independiente Medellín','Independiente Santa Fe':'Independiente Santa Fe','Deportes Tolima':'Deportes Tolima',
@@ -466,12 +489,33 @@ const ccWikiClubTitles={
 };
 const ccWikiLogoCache=new Map();
 function ccCrestBaseName(team){return String(team||'').split(' · ')[0].trim();}
-function crestHTML(team){const base=ccCrestBaseName(team);const slug=logoSlugs[team]||logoSlugs[base];const src=slug?slugBase+slug+'.png':'';const wiki=ccWikiClubTitles[base]||'';const imgAttrs=wiki?`data-wiki-title="${esc(wiki)}" style="visibility:hidden"`:src?`src="${src}"`:`data-wiki-title="${esc(base)}" style="visibility:hidden"`;return `<span class="crest-wrap" data-crest-name="${esc(base)}"><img class="crest-logo" ${imgAttrs} alt="Escudo oficial do ${esc(base)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display='none'"><span class="crest-fallback">${initials(base)}</span></span>`} 
+// Os escudos conhecidos voltam a carregar diretamente; a consulta à Wikipédia é apenas um plano B.
+// Antes, a preferência pela miniatura do artigo escondia estes arquivos, mesmo quando já havia um escudo direto.
+function crestHTML(team){
+ const base=ccCrestBaseName(team);
+ const slug=logoSlugs[team]||logoSlugs[base];
+ const src=logoUrlOverrides[base]||logoUrlOverrides[team]||(slug?slugBase+slug+'.png':'');
+ const wiki=ccWikiClubTitles[base]||ccWikiClubTitles[team]||base;
+ const imgAttrs=src?`src="${src}" data-fallback-wiki-title="${esc(wiki)}"`:`data-wiki-title="${esc(wiki)}" style="visibility:hidden"`;
+ return `<span class="crest-wrap" data-crest-name="${esc(base)}"><img class="crest-logo" ${imgAttrs} alt="Escudo oficial do ${esc(base)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onload="ccCrestImageLoaded(this)" onerror="ccCrestImageError(this)"><span class="crest-fallback">${initials(base)}</span></span>`
+}
+function ccCrestImageLoaded(img){
+ img.style.display='';img.style.visibility='visible';
+ const fb=img.parentElement?.querySelector('.crest-fallback');if(fb)fb.style.display='none';
+}
+function ccCrestImageError(img){
+ if(img.dataset.fallbackWikiTitle&&!img.dataset.wikiFallbackTried){
+  img.dataset.wikiFallbackTried='1';img.dataset.wikiTitle=img.dataset.fallbackWikiTitle;img.removeAttribute('data-fallback-wiki-title');
+  img.removeAttribute('src');img.style.display='';img.style.visibility='hidden';
+  const fb=img.parentElement?.querySelector('.crest-fallback');if(fb)fb.style.display='grid';
+  ccHydrateForeignCrests(img.closest('.card')||img.parentElement?.parentElement||document);
+ }else{img.style.display='none';const fb=img.parentElement?.querySelector('.crest-fallback');if(fb)fb.style.display='grid';}
+}
 function ccHydrateForeignCrests(root=document){
  const imgs=root.querySelectorAll('img.crest-logo[data-wiki-title]:not([data-wiki-requested])');
  imgs.forEach(img=>{const title=img.dataset.wikiTitle;if(!title)return;img.dataset.wikiRequested='1';
   if(!ccWikiLogoCache.has(title)){const api='https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=thumbnail&pithumbsize=120&titles='+encodeURIComponent(title)+'&origin=*';ccWikiLogoCache.set(title,fetch(api).then(r=>{if(!r.ok)throw new Error('logo');return r.json()}).then(data=>{const pages=data?.query?.pages||{};const page=pages[Object.keys(pages)[0]];return page?.thumbnail?.source||null}).catch(()=>null));}
-  ccWikiLogoCache.get(title).then(url=>{if(!img.isConnected)return;if(url){img.src=url;img.style.visibility='visible';img.removeAttribute('data-wiki-title');}else{img.style.display='none';}});
+  ccWikiLogoCache.get(title).then(url=>{if(!img.isConnected)return;if(url){img.style.display='';img.src=url;img.style.visibility='visible';img.removeAttribute('data-wiki-title');}else{img.style.display='none';const fb=img.parentElement?.querySelector('.crest-fallback');if(fb)fb.style.display='grid';}});
  });
 }
 function eligibleRoster(team){return (roster[team]||[]).filter(n=>!goalkeepers.has(n))}
